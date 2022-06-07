@@ -39,13 +39,20 @@
 			const ambientLighting = new THREE.AmbientLight();
 			scene.add(ambientLighting);
 
-			const spotLighting = new THREE.SpotLight(0xffffff, 3, 6);
-		//	spotLighting.position.set(5, 5, 5);
-			spotLighting.castShadow = true;
-			scene.add(spotLighting);
+			const pointLighting = new THREE.PointLight( 0xff0000, 1, 12 );
+			scene.add( pointLighting );
+			pointLighting.castShadow = true;
+			pointLighting.position.y = 5;
+			scene.add(pointLighting);
 
-			const spotLightHelper = new THREE.SpotLightHelper( spotLighting );
-			scene.add( spotLightHelper );
+			const sphereSize = 1;
+			const pointLightHelper = new THREE.PointLightHelper( pointLighting, sphereSize);
+			scene.add( pointLightHelper );
+
+			const plane2 = new THREE.Mesh(planeGeometry, planeMaterial);
+			plane2.position.z = 5;
+			plane2.position.x = Math.PI;
+			scene.add(plane2);
 
 			camera.position.z = 5;
             let orbitControl = new THREE.OrbitControls( camera, renderer.domElement );
