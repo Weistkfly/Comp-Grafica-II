@@ -19,29 +19,38 @@
 
 			const scene = new THREE.Scene();
 			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-
 			const renderer = new THREE.WebGLRenderer();
 			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.shadowMap.enabled = true;
+			renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 			document.body.appendChild( renderer.domElement );
 
 			//Front right hoof
 			const hoof1 = new THREE.BoxGeometry(legWidth, legHeight, legWidth);
-			const hoof1Material = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+			const hoof1Material = new THREE.MeshLambertMaterial( { color: 0x000000 } );
 			const frHoof = new THREE.Mesh( hoof1, hoof1Material );
+			frHoof.castShadow = true;
+			frHoof.receiveShadow = true;
 			scene.add( frHoof );
 
 			//Front left hoof
 			const flHoof = new THREE.Mesh( hoof1, hoof1Material );
+			flHoof.castShadow = true;
+			flHoof.receiveShadow = true;
 			scene.add( flHoof );
 			flHoof.position.x = -1;
 
 			//Back right hoof
 			const brHoof = new THREE.Mesh( hoof1, hoof1Material );
+			brHoof.castShadow = true;
+			brHoof.receiveShadow = true;
 			scene.add( brHoof );
 			brHoof.position.z = positionZ;
 
 			//Back left hoof
 			const blHoof = new THREE.Mesh( hoof1, hoof1Material );
+			blHoof.castShadow = true;
+			blHoof.receiveShadow = true;
 			scene.add( blHoof );
 			blHoof.position.x = -1;
 			blHoof.position.z = positionZ;
@@ -49,19 +58,25 @@
 			//Front right cannon bone
 			const cannonBoneLength = legHeight;
 			const cannonBone = new THREE.BoxGeometry(legWidth, cannonBoneLength, legWidth);
-			const CannonBoneMaterial = new THREE.MeshBasicMaterial( { color: '#AD9E75' } );
+			const CannonBoneMaterial = new THREE.MeshLambertMaterial( { color: '#AD9E75' } );
 			const frCannonBone = new THREE.Mesh( cannonBone, CannonBoneMaterial );
+			frCannonBone.castShadow = true;
+			frCannonBone.receiveShadow = true;
 			scene.add( frCannonBone );
 			frCannonBone.position.y = legHeight ;
 
 			//Front left cannon bone
 			const flCannonBone = new THREE.Mesh( cannonBone, CannonBoneMaterial );
+			flCannonBone.castShadow = true;
+			flCannonBone.receiveShadow = true;
 			scene.add( flCannonBone );
 			flCannonBone.position.y = legHeight;
 			flCannonBone.position.x = -1;
 
 			//Back right cannon bone
 			const brCannonBone = new THREE.Mesh( cannonBone, CannonBoneMaterial );
+			brCannonBone.castShadow = true;
+			brCannonBone.receiveShadow = true;
 			scene.add( brCannonBone );
 			brCannonBone.position.y = legHeight;
 			brCannonBone.position.x = -1;
@@ -69,6 +84,8 @@
 
 			//Back left cannon bone
 			const blCannonBone = new THREE.Mesh( cannonBone, CannonBoneMaterial );
+			blCannonBone.castShadow = true;
+			blCannonBone.receiveShadow = true;
 			scene.add( blCannonBone );
 			blCannonBone.position.y = legHeight;
 			blCannonBone.position.z = positionZ;
@@ -78,19 +95,25 @@
 			const giraphTexture = new THREE.TextureLoader().load('textures/Giraph.jpg');
 			const giraphTexture2 = new THREE.TextureLoader().load('textures/Giraph.jpg');
 			const forearm = new THREE.BoxGeometry(legWidth, forearmHeight * 3, legWidth);
-			const forearmMaterial = new THREE.MeshBasicMaterial( { map: giraphTexture2 } );
+			const forearmMaterial = new THREE.MeshLambertMaterial( { map: giraphTexture2 } );
 			const frForearm = new THREE.Mesh( forearm, forearmMaterial );
+			frForearm.castShadow = true;
+			frForearm.receiveShadow = true;
 			scene.add( frForearm );
 			frForearm.position.y = legHeight * 7.5;
 
 			//Front left forearm
 			const flForearm = new THREE.Mesh( forearm, forearmMaterial );
+			flForearm.castShadow = true;
+			flForearm.receiveShadow = true;
 			scene.add( flForearm );
 			flForearm.position.y = legHeight * 7.5;
 			flForearm.position.x = -1;
 
 			//Back left forearm
 			const blForearm = new THREE.Mesh( forearm, forearmMaterial );
+			blForearm.castShadow = true;
+			blForearm.receiveShadow = true;
 			scene.add( blForearm );
 			blForearm.position.y = legHeight * 7.5;
 			blForearm.position.z = positionZ;
@@ -98,6 +121,8 @@
 
 			//Back left forearm
 			const brForearm = new THREE.Mesh( forearm, forearmMaterial );
+			brForearm.castShadow = true;
+			brForearm.receiveShadow = true;
 			scene.add( brForearm );
 			brForearm.position.y = legHeight * 7.5;
 			brForearm.position.z = positionZ;
@@ -105,8 +130,10 @@
 			//Body
 			const bodyHeight = forearmHeight * 1.5;
 			const bodyForm = new THREE.BoxGeometry(1.2, bodyHeight, 1.7);
-			const bodyMaterial = new THREE.MeshBasicMaterial( { map: giraphTexture2 } );
+			const bodyMaterial = new THREE.MeshLambertMaterial( { map: giraphTexture2 } );
 			const body = new THREE.Mesh(bodyForm, bodyMaterial);
+			body.castShadow = true;
+			body.receiveShadow = true;
 			scene.add(body);
 			body.position.y = bodyHeight * 2.75;
 			body.position.x = -0.5;
@@ -114,8 +141,10 @@
 
 			//Tail
 			const tailForm = new THREE.BoxGeometry(0.2, bodyHeight * 2, 0.2);
-			const tailMaterial = new THREE.MeshBasicMaterial({map: giraphTexture2});
+			const tailMaterial = new THREE.MeshLambertMaterial({map: giraphTexture2});
 			const tail = new THREE.Mesh(tailForm, tailMaterial);
+			tail.castShadow = true;
+			tail.receiveShadow = true;
 			scene.add(tail);
 			tail.position.x = -0.5;
 			tail.position.y = 1.4;
@@ -124,8 +153,10 @@
 
 			//Neck
 			const neckForm = new THREE.CylinderGeometry(0.2, 0.4, 3, 15, 5);
-			const neckMaterial = new THREE.MeshBasicMaterial({map: giraphTexture2});
+			const neckMaterial = new THREE.MeshLambertMaterial({map: giraphTexture2});
 			const neck = new THREE.Mesh(neckForm, neckMaterial);
+			neck.castShadow = true;
+			neck.receiveShadow = true;
 			scene.add(neck);
 			neck.rotation.x = Math.PI * 0.1;
 			neck.position.y = bodyHeight * 5.1;
@@ -138,8 +169,10 @@
 			giraphTexture.wrapS = THREE.RepeatWrapping;
 			giraphTexture.wrapT = THREE.RepeatWrapping;
 			giraphTexture.repeat.set(0.1, 0.1);
-			const headMaterial = new THREE.MeshBasicMaterial( { color: '#AD9E75' } );
+			const headMaterial = new THREE.MeshLambertMaterial( { color: '#AD9E75' } );
 			const head = new THREE.Mesh(headForm, headMaterial);
+			head.castShadow = true;
+			head.receiveShadow = true;
 			scene.add(head);
 			head.position.y = bodyHeight * 7.7;
 			head.rotation.x = Math.PI * 1.1;
@@ -148,8 +181,10 @@
 
 			//Nose
 			const noseForm = new THREE.BoxGeometry(0.4, bodyHeight * 0.5, 0.3);
-			const noseMaterial = new THREE.MeshBasicMaterial( { color: '#512E1C' } );
+			const noseMaterial = new THREE.MeshLambertMaterial( { color: '#512E1C' } );
 			const nose = new THREE.Mesh(noseForm, noseMaterial);
+			nose.castShadow = true;
+			nose.receiveShadow = true;
 			scene.add(nose);
 			nose.position.y = bodyHeight * 7.35;
 			nose.rotation.x = Math.PI * 1.1;
@@ -158,8 +193,10 @@
 
 			//Right horn
 			const rHornForm = new THREE.CylinderGeometry(0.05, 0.1, 0.2, 4, 1);
-			const rHornMaterial = new THREE.MeshBasicMaterial({color: '#AD9E75'});
+			const rHornMaterial = new THREE.MeshLambertMaterial({color: '#AD9E75'});
 			const rHorn = new THREE.Mesh(rHornForm, rHornMaterial);
+			rHorn.castShadow = true;
+			rHorn.receiveShadow = true;
 			scene.add(rHorn);
 			rHorn.rotation.x = Math.PI * 0.1;
 			rHorn.rotation.y = Math.PI * 1.75;
@@ -169,8 +206,10 @@
 
 			//Left horn
 			const lHornForm = new THREE.CylinderGeometry(0.05, 0.1, 0.2, 4, 1);
-			const lHornMaterial = new THREE.MeshBasicMaterial({color: '#AD9E75'});
+			const lHornMaterial = new THREE.MeshLambertMaterial({color: '#AD9E75'});
 			const lHorn = new THREE.Mesh(lHornForm, lHornMaterial);
+			lHorn.castShadow = true;
+			lHorn.receiveShadow = true;
 			scene.add(lHorn);
 			lHorn.rotation.x = Math.PI * 0.1;
 			lHorn.rotation.y = Math.PI * 1.75;
@@ -182,6 +221,8 @@
 			const hornTopForm = new THREE.BoxGeometry(0.1, 0.1, 0.15);
 			const hornTopMaterial = new THREE.MeshLambertMaterial({color: '#512E1C'});
 			const rHornTop = new THREE.Mesh(hornTopForm, hornTopMaterial)
+			rHornTop.castShadow = true;
+			rHornTop.receiveShadow = true;
 			scene.add(rHornTop);
 			rHornTop.rotation.x = Math.PI * 0.1;
 			rHornTop.position.y = 5.1;
@@ -190,6 +231,8 @@
 
 			//Left horn top
 			const lHornTop = new THREE.Mesh(hornTopForm, hornTopMaterial)
+			lHornTop.castShadow = true;
+			lHornTop.receiveShadow = true;
 			scene.add(lHornTop);
 			lHornTop.rotation.x = Math.PI * 0.1;
 			lHornTop.position.y = 5.1;
@@ -199,14 +242,18 @@
 			//Right ear
 			const earForm = new THREE.BoxGeometry(0.4, 0.2, 0.15);
 			const rEar = new THREE.Mesh(earForm, hornTopMaterial)
+			rEar.castShadow = true;
+			rEar.receiveShadow = true;
 			scene.add(rEar);
 			rEar.rotation.x = Math.PI * 0.1;
 			rEar.position.y = 4.7;
 			rEar.position.z = 0.7;
-			rEar.position.x = -0.29;
+			rEar.position.x = -0.29
 
 			//Left ear
 			const lEar = new THREE.Mesh(earForm, hornTopMaterial)
+			lEar.castShadow = true;
+			lEar.receiveShadow = true;
 			scene.add(lEar);
 			lEar.rotation.x = Math.PI * 0.1;
 			lEar.position.y = 4.7;
@@ -215,8 +262,10 @@
 
 			//Left eye
 			const eyeGeometry = new THREE.PlaneGeometry(0.1, 0.1);
-			const eyeMaterial = new THREE.MeshPhongMaterial({color: 'black', side:THREE.DoubleSide});
+			const eyeMaterial = new THREE.MeshLambertMaterial({color: 'black', side:THREE.DoubleSide});
 			const lEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+			lEye.castShadow = true;
+			lEye.receiveShadow = true;
 			scene.add(lEye);
 			lEye.position.y = 4.7;
 			lEye.position.x = -0.71;
@@ -226,6 +275,8 @@
 
 			//Right eye
 			const rEye = new THREE.Mesh(eyeGeometry, eyeMaterial);
+			rEye.castShadow = true;
+			rEye.receiveShadow = true;
 			scene.add(rEye);
 			rEye.position.y = 4.7;
 			rEye.position.x = -0.29;
@@ -234,7 +285,7 @@
 			rEye.rotation.x = Math.PI * 1.1;
 
 			const planeGeometry = new THREE.PlaneGeometry(10, 10);
-			const planeMaterial = new THREE.MeshPhongMaterial({color: '#87CEEB', side:THREE.DoubleSide});
+			const planeMaterial = new THREE.MeshLambertMaterial({color: '#87CEEB', side:THREE.DoubleSide});
 			const plane = new THREE.Mesh(planeGeometry, planeMaterial);
 			//plane.castShadow = true;
 			plane.receiveShadow = true;
@@ -244,12 +295,13 @@
 
 			const plane2 = new THREE.Mesh(planeGeometry, planeMaterial);
 			scene.add(plane2);
+			plane2.receiveShadow = true;
 			plane2.position.z = -5;
 			plane2.position.y = 4.5;
 
 			const plane3 = new THREE.Mesh(planeGeometry, planeMaterial);
 			scene.add(plane3);
-
+			plane3.receiveShadow = true;
 			plane3.rotation.y = Math.PI * 0.5;
 			plane3.position.x = 5;
 			plane3.position.y = 4.5;
@@ -262,9 +314,12 @@
 			const ambientLighting = new THREE.AmbientLight();
 			scene.add(ambientLighting);
 
-			const spotLighting = new THREE.SpotLight(0xffffff, 0.5, 4);
-			spotLighting.castShadow = true;
-			scene.add(spotLighting);
+			const pointLighting = new THREE.PointLight( "#00ff99", 2, 20 );
+			scene.add( pointLighting );
+			pointLighting.castShadow = true;
+			pointLighting.position.y = 5;
+			pointLighting.position.z = 3;
+			scene.add(pointLighting);
 
 			function animate() {
 				requestAnimationFrame( animate );
