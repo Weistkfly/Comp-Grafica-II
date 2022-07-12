@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Objects</title>
+	<style>
+		body {
+			margin: 0;
+		}
+	</style>
+</head>
+
+<body>
+	<script src="js/three.js"></script>
+	<script src="js/OrbitControl.js"></script>
+	<script src="js/OBJLoader.js"></script>
+	<script>
+		const scene = new THREE.Scene();
+		const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+		const renderer = new THREE.WebGLRenderer();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.shadowMap.enabled = true;
+		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+		document.body.appendChild(renderer.domElement);
+
+		// instantiate a loader
+		const loader = new THREE.OBJLoader();
+
+		// load a resource
+		loader.load(
+			// resource URL
+			'models/RoundFlowerPot.obj',
+			// called when resource is loaded
+			function (object) {
+				object.position.x = 5;
+				scene.add(object);
+
+			},
+			// called when loading is in progresses
+			function (xhr) {
+
+				console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+
+			},
+			// called when loading has errors
+			function (error) {
+
+				console.log('An error happened');
+
+			}
+		);
+
+		const pointLighting = new THREE.PointLight(0xff0000, 3, 10);
+		scene.add(pointLighting);
+		pointLighting.castShadow = true;
+		pointLighting.position.y = 5;
+		scene.add(pointLighting);
+
+		const sphereSize = 1;
+		const pointLightHelper = new THREE.PointLightHelper( pointLighting, sphereSize);
+		scene.add( pointLightHelper );
+
+		camera.position.z = 6;
+		camera.position.y = 5;
+		let orbitControl = new THREE.OrbitControls(camera, renderer.domElement);
+
+		function animate() {
+			requestAnimationFrame(animate);
+			orbitControl.update();
+			renderer.render(scene, camera);
+		};
+
+		animate();
+	</script>
+</body>
+
+</html>
