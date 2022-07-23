@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Objects</title>
+	<style>
+		body {
+			margin: 0;
+		}
+	</style>
+</head>
+
+<body>
+
+	<label for="material">Material:</label>
+	<select name="material" id="material" onchange="Type()">
+	  <option value="Cemento">Cemento</option>
+	  <option value="Ceramica">Ceramica</option>
+	  <option value="Plastico">Plastico</option>
+	</select>
+
+	<label for="colors">Color:</label>
+	<input type="color" id="color" name="color" oninput="Color()"
+	value="#000002">
+
+	<label for="capacidad">Capacidad:</label>
+	<select name="capacidad" id="capacidad" onchange="Pot()">
+	  <option value="Square">Cuadrada</option>
+	  <option value="Neck">Con cuello</option>
+	  <option value="Round">Redonda</option>
+	</select>
+
+	<p id="price">Precio</p>
+
+	<script src="js/three.js"></script>
+	<script src="js/OrbitControl.js"></script>
+	<script src="js/GLTFLoader.js"></script>
+	<script>
+		const scene = new THREE.Scene();
+		const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+		
+		var potMaterial = document.getElementById("material");
+		var pot = document.getElementById("capacidad");
+		var pri = document.getElementById("price"), price = 0;
+		var haveColor = document.getElementById("hasColor");
+
+		const renderer = new THREE.WebGLRenderer();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.shadowMap.enabled = true;
+		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+		document.body.appendChild(renderer.domElement);
+
+		const cementoTexture = new THREE.TextureLoader().load('textures/cemento.jpg');
+		const ceramicaTexture = new THREE.TextureLoader().load('textures/Ceramica.jpg');
+		const plasticoTexture = new THREE.TextureLoader().load('textures/Plastico.jpg')
+
+		// Instantiate a loader
+		const loader = new THREE.GLTFLoader();
+
+		var neckPot;
+		var neckPotBase;
+		// Load a glTF resource
+		loader.load(
+			// resource URL
+			'models/NeckPot.gltf',
+			// called when the resource is loaded
+			function (gltf) {
+				neckPot = gltf.scene;
+				neckPot.rotation.y = Math.PI * 1.5;
+				neckPot.visible = false;
+				neckPotBase = neckPot.getObjectByName("Cylinder");
+
+				scene.add(neckPot);
+				
+				gltf.animations; // Array<THREE.AnimationClip>
+				gltf.scene; // THREE.Group
+				gltf.scenes; // Array<THREE.Group>
+				gltf.cameras; // Array<THREE.Camera>
+				gltf.asset; // Object
+			}
+		);
+
+		var squarePot;
+		var squarePotBase;
+		loader.load(
+			// resource URL
+			'models/SquarePot.gltf',
+			// called when the resource is loaded
+			function (gltf) {
+				squarePot = gltf.scene;
+				squarePotBase = squarePot.getObjectByName("Cylinder");
+				squarePot.rotation.y = Math.PI * 1.5;
+
+				scene.add(squarePot);
+			
+				gltf.animations; // Array<THREE.AnimationClip>
+				gltf.scene; // THREE.Group
+				gltf.scenes; // Array<THREE.Group>
+				gltf.cameras; // Array<THREE.Camera>
+				gltf.asset; // Object
+			}
+		);
+
+		var roundPot;
+		var roundPotBase;
+		loader.load(
+			// resource URL
+			'models/RoundPot.gltf',
+			// called when the resource is loaded
+			function (gltf) {
+				roundPot = gltf.scene;
+				roundPot.visible = false;
+				roundPotBase = roundPot.getObjectByName("Cylinder");
+				roundPot.rotation.y = Math.PI * 1.5;
+
+				scene.add(roundPot);
+				
+				gltf.animations; // Array<THREE.AnimationClip>
+				gltf.scene; // THREE.Group
+				gltf.scenes; // Array<THREE.Group>
+				gltf.cameras; // Array<THREE.Camera>
+				gltf.asset; // Object
+			}
+		);
+	
+		var potPrice = 0;
+		function Pot(){
+			switch (pot.value){
+				case "Round":
+					potPrice = 250;
+					roundPot.visible = true;
+					neckPot.visible = false;
+					squarePot.visible = false;
+					break;
+
+				case "Neck": 
+					potPrice = 150;
+					roundPot.visible = false;
+					neckPot.visible = true;
+					squarePot.visible = false;
+					break;
+
+				case "Square": 
+					potPrice = 200;
+					roundPot.visible = false;
+					neckPot.visible = false;
+					squarePot.visible = true;
+					break;
+			}
+			calculatePrice();
+		}
+
+		var colorPrice = 0;
+		function Color(){
+			var potColor = document.getElementById("color").value;
+			colorPrice = 150;
+			neckPotBase.traverse((obj) => {
+				if (obj.isMesh){
+					obj.material.color.set(potColor);
+					obj.material.needsUpdate = true;
+				}
+			})
+			squarePotBase.traverse((obj) => {
+				if (obj.isMesh){
+					obj.material.color.set(potColor);
+					obj.material.needsUpdate = true;
+				}
+			})
+			roundPotBase.traverse((obj) => {
+				if (obj.isMesh){
+					obj.material.color.set(potColor);
+					obj.material.needsUpdate = true;
+				}
+			})
+			calculatePrice();
+		}
+
+		var typePrice = 0;
+		function Type(){
+			switch (potMaterial.value){
+				case "Cemento": 
+					typePrice = 200;
+					break;
+				case "Ceramica": 
+					typePrice = 250;
+					break;
+				case "Plastico": 
+					typePrice = 100;
+					break;
+			}
+			squarePotBase.traverse((obj) => {
+					if (obj.isMesh){
+						switch (potMaterial.value){
+							case "Cemento": 
+								obj.material.map = cementoTexture;
+								break;
+							case "Ceramica": 
+								obj.material.map = ceramicaTexture;
+								break;
+							case "Plastico": 
+								obj.material.map = plasticoTexture;
+								break;
+						}
+						obj.material.needsUpdate = true;
+					}
+				});
+				roundPotBase.traverse((obj) => {
+					if (obj.isMesh){
+						switch (potMaterial.value){
+							case "Cemento": 
+								obj.material.map = cementoTexture;
+								break;
+							case "Ceramica": 
+								obj.material.map = ceramicaTexture;
+								break;
+							case "Plastico": 
+								obj.material.map = plasticoTexture;
+								break;
+						}
+						obj.material.needsUpdate = true;
+					}
+				});
+				neckPotBase.traverse((obj) => {
+					if (obj.isMesh){
+						switch (potMaterial.value){
+							case "Cemento": 
+								obj.material.map = cementoTexture;
+								break;
+							case "Ceramica": 
+								obj.material.map = ceramicaTexture;
+								break;
+							case "Plastico": 
+								obj.material.map = plasticoTexture;
+								break;
+						}
+						obj.material.needsUpdate = true;
+					}
+				});
+				calculatePrice();
+		}
+
+		function calculatePrice(){
+			price = potPrice + colorPrice + typePrice;
+			console.log(price);
+			pri.innerHTML = "Precio: " + price;
+		}
+
+		const ambient = new THREE.AmbientLight();
+		scene.add(ambient);
+
+		camera.position.z = 6;
+		camera.position.y = 5;
+		let orbitControl = new THREE.OrbitControls(camera, renderer.domElement);
+
+		function animate() {
+			requestAnimationFrame(animate);
+			orbitControl.update();
+			renderer.render(scene, camera);
+		};
+
+		animate();
+	</script>
+</body>
+
+</html>
